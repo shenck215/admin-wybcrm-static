@@ -1,0 +1,6 @@
+{
+    "WYB_serviceProvider": {
+        "models": ["register"],
+        "componentUrl": "User/Register"
+    }
+}
