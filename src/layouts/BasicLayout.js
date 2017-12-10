@@ -1,14 +1,14 @@
 import React from 'react';
-import { Layout, Menu, Icon, Dropdown, Tag, Spin } from 'antd';
+import { Layout, Menu, Icon, Dropdown, Spin } from 'antd';
 import DocumentTitle from 'react-document-title';
 import { connect } from 'dva';
 import { Link, Route, Redirect, Switch } from 'dva/router';
-import moment from 'moment';
-import groupBy from 'lodash/groupBy';
+// import moment from 'moment';
+// import groupBy from 'lodash/groupBy';
 import { ContainerQuery } from 'react-container-query';
 import classNames from 'classnames';
 import { setTimeout } from 'timers';
-// import Debounce, { debounce } from 'lodash-decorators/debounce';
+import Debounce from 'lodash-decorators/debounce';
 import GlobalFooter from '../components/GlobalFooter';
 import NotFound from '../routes/Exception/404';
 import styles from './BasicLayout.less';
@@ -38,8 +38,7 @@ const query = {
   },
 };
 
-class BasicLayout extends React.PureComponent {
-
+class BasicLayout extends React.Component {
   constructor(props) {
     super(props);
     // 把一级 Layout 的 children 作为菜单项
@@ -50,19 +49,17 @@ class BasicLayout extends React.PureComponent {
   }
 
   componentWillMount() {
-
     this.props.dispatch({
       type: 'user/initLoading',
       payload: false,
-    })
+    });
 
     setTimeout(() => {
       this.props.dispatch({
         type: 'user/initLoading',
         payload: true,
-      })
-    },500)
-    
+      });
+    }, 500);
   }
   componentWillUnmount() {
     this.triggerResizeEvent.cancel();
@@ -91,7 +88,6 @@ class BasicLayout extends React.PureComponent {
   //   return arr;
   // }
   getDefaultCollapsedSubMenus(props) {
-    
     const currentMenuSelectedKeys = [...this.getCurrentMenuSelectedKeys(props)];
     currentMenuSelectedKeys.splice(-1, 1);
     if (currentMenuSelectedKeys.length === 0) {
@@ -100,13 +96,12 @@ class BasicLayout extends React.PureComponent {
     return currentMenuSelectedKeys;
   }
   getCurrentMenuSelectedKeys(props) {
-    
     const { location: { pathname } } = props || this.props;
     const keys = pathname.split('/').slice(1);
     if (keys.length === 1 && keys[0] === '') {
       return [this.menus[0].key];
     }
-    return [keys[0],keys[1],`${keys[2]}/index`];
+    return [keys[0], keys[1], `${keys[2]}/index`];
   }
   getNavMenuItems(menusData, parentPath = '') {
     if (!menusData) {
@@ -161,46 +156,45 @@ class BasicLayout extends React.PureComponent {
       );
     });
   }
-  getPageTitle() {
-    const { location, getRouteData } = this.props;
-    const { pathname } = location;
-    let title = '无忧保CRM';
-    // getRouteData('BasicLayout').forEach((item) => {
-    //   if (item.path === pathname) {
-    //     title = `${item.name} - Ant Design Pro`;
-    //   }
-    // });
-    return title;
-  }
-  getNoticeData() {
-    const { notices = [] } = this.props;
-    if (notices.length === 0) {
-      return {};
-    }
-    const newNotices = notices.map((notice) => {
-      const newNotice = { ...notice };
-      if (newNotice.datetime) {
-        newNotice.datetime = moment(notice.datetime).fromNow();
-      }
-      // transform id to item key
-      if (newNotice.id) {
-        newNotice.key = newNotice.id;
-      }
-      if (newNotice.extra && newNotice.status) {
-        const color = ({
-          todo: '',
-          processing: 'blue',
-          urgent: 'red',
-          doing: 'gold',
-        })[newNotice.status];
-        newNotice.extra = <Tag color={color} style={{ marginRight: 0 }}>{newNotice.extra}</Tag>;
-      }
-      return newNotice;
-    });
-    return groupBy(newNotices, 'type');
-  }
+  // getPageTitle() {
+  //   const { location } = this.props;
+  //   const { pathname } = location;
+  //   let title = '无忧保CRM';
+  //   getRouteData('BasicLayout').forEach((item) => {
+  //      if (item.path === pathname) {
+  //        title = `${item.name} - Ant Design Pro`;
+  //      }
+  //   });
+  //   return title;
+  // }
+  // getNoticeData() {
+  //   const { notices = [] } = this.props;
+  //   if (notices.length === 0) {
+  //     return {};
+  //   }
+  //   const newNotices = notices.map((notice) => {
+  //     const newNotice = { ...notice };
+  //     if (newNotice.datetime) {
+  //       newNotice.datetime = moment(notice.datetime).fromNow();
+  //     }
+  //     // transform id to item key
+  //     if (newNotice.id) {
+  //       newNotice.key = newNotice.id;
+  //     }
+  //     if (newNotice.extra && newNotice.status) {
+  //       const color = ({
+  //         todo: '',
+  //         processing: 'blue',
+  //         urgent: 'red',
+  //         doing: 'gold',
+  //       })[newNotice.status];
+  //       newNotice.extra = <Tag color={color} style={{ marginRight: 0 }}>{newNotice.extra}</Tag>;
+  //     }
+  //     return newNotice;
+  //   });
+  //   return groupBy(newNotices, 'type');
+  // }
   handleOpenChange = (openKeys) => {
-    
     const lastOpenKey = openKeys[openKeys.length - 1];
     const isMainMenu = this.menus.some(
       item => lastOpenKey && (item.key === lastOpenKey || item.path === lastOpenKey)
@@ -238,7 +232,7 @@ class BasicLayout extends React.PureComponent {
   //   }
   // }
   render() {
-    const {initLoading, userInfo, collapsed, fetchingNotices, getRouteData } = this.props;
+    const { initLoading, userInfo, collapsed, getRouteData } = this.props;
 
     const menu = (
       <Menu className={styles.menu} selectedKeys={[]} onClick={this.onMenuClick}>
@@ -248,7 +242,7 @@ class BasicLayout extends React.PureComponent {
         <Menu.Item key="logout"><Icon type="poweroff" />退出登录</Menu.Item>
       </Menu>
     );
-    const noticeData = this.getNoticeData();
+    // const noticeData = this.getNoticeData();
 
     // Don't show popup menu when it is been collapsed
     const menuProps = collapsed ? {} : {
@@ -269,8 +263,7 @@ class BasicLayout extends React.PureComponent {
           <div className={styles.logo}>
             无忧保CRM
           </div>
-          {
-            initLoading?
+          {initLoading ?
             <Menu
               theme="dark"
               mode="inline"
@@ -284,7 +277,6 @@ class BasicLayout extends React.PureComponent {
             :
             <Spin size="small" style={{ marginLeft: 8 }} />
           }
-          
         </Sider>
         <Layout>
           <Header className={styles.header}>
@@ -294,7 +286,6 @@ class BasicLayout extends React.PureComponent {
               onClick={this.toggle}
             />
             <div className={styles.right}>
-              
               {initLoading ? (
                 <Dropdown overlay={menu}>
                   <span className={`${styles.action} ${styles.account}`}>
@@ -349,7 +340,7 @@ class BasicLayout extends React.PureComponent {
     );
 
     return (
-      <DocumentTitle title={this.getPageTitle()}>
+      <DocumentTitle title="无忧保CRM">
         <ContainerQuery query={query}>
           {params => <div className={classNames(params)}>{layout}</div>}
         </ContainerQuery>
