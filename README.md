@@ -1,4 +1,4 @@
-[中文 README](README-zh_CN.md)
+[中文 README](README.zh-CN.md)
 
 ## develop
   ``npm run start``
