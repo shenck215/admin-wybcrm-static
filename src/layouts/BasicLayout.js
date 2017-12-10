@@ -1,6 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Layout, Menu, Icon, Avatar, Dropdown, Tag, message, Spin } from 'antd';
+import { Layout, Menu, Icon, Dropdown, Tag, Spin } from 'antd';
 import DocumentTitle from 'react-document-title';
 import { connect } from 'dva';
 import { Link, Route, Redirect, Switch } from 'dva/router';
@@ -8,12 +7,12 @@ import moment from 'moment';
 import groupBy from 'lodash/groupBy';
 import { ContainerQuery } from 'react-container-query';
 import classNames from 'classnames';
-import Debounce, { debounce } from 'lodash-decorators/debounce';
+import { setTimeout } from 'timers';
+// import Debounce, { debounce } from 'lodash-decorators/debounce';
 import GlobalFooter from '../components/GlobalFooter';
 import NotFound from '../routes/Exception/404';
 import styles from './BasicLayout.less';
-import logo from '../assets/logo.svg';
-import { setTimeout } from 'timers';
+// import logo from '../assets/logo.svg';
 
 const { Header, Sider, Content } = Layout;
 const { SubMenu } = Menu;
@@ -81,16 +80,16 @@ class BasicLayout extends React.PureComponent {
       });
     }
   }
-  getMenuData = (data, parentPath) => {
-    let arr = [];
-    data.forEach((item) => {
-      if (item.children) {
-        arr.push({ path: `${parentPath}/${item.path}`, name: item.name });
-        arr = arr.concat(this.getMenuData(item.children, `${parentPath}/${item.path}`));
-      }
-    });
-    return arr;
-  }
+  // getMenuData = (data, parentPath) => {
+  //   let arr = [];
+  //   data.forEach((item) => {
+  //     if (item.children) {
+  //       arr.push({ path: `${parentPath}/${item.path}`, name: item.name });
+  //       arr = arr.concat(this.getMenuData(item.children, `${parentPath}/${item.path}`));
+  //     }
+  //   });
+  //   return arr;
+  // }
   getDefaultCollapsedSubMenus(props) {
     
     const currentMenuSelectedKeys = [...this.getCurrentMenuSelectedKeys(props)];
@@ -224,20 +223,20 @@ class BasicLayout extends React.PureComponent {
     event.initEvent('resize', true, false);
     window.dispatchEvent(event);
   }
-  handleNoticeClear = (type) => {
-    message.success(`清空了${type}`);
-    this.props.dispatch({
-      type: 'global/clearNotices',
-      payload: type,
-    });
-  }
-  handleNoticeVisibleChange = (visible) => {
-    if (visible) {
-      this.props.dispatch({
-        type: 'global/fetchNotices',
-      });
-    }
-  }
+  // handleNoticeClear = (type) => {
+  //   message.success(`清空了${type}`);
+  //   this.props.dispatch({
+  //     type: 'global/clearNotices',
+  //     payload: type,
+  //   });
+  // }
+  // handleNoticeVisibleChange = (visible) => {
+  //   if (visible) {
+  //     this.props.dispatch({
+  //       type: 'global/fetchNotices',
+  //     });
+  //   }
+  // }
   render() {
     const {initLoading, userInfo, collapsed, fetchingNotices, getRouteData } = this.props;
 
